@@ -3,45 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <title>CASH REGISTER</title>
+  <link href="style.css" rel="stylesheet" media="screen">
 </head>
 <body>
   <div id="calcBlock">
     <!-- top portion -->
     <div id="displayBlock">
-
+      <div class="display">0000000</div>
+      <div class="message">Lorum Ipsum Dolor Sit Amet</div>
     </div>
     <!-- bottom portion -->
     <div id="buttonsBlock">
-      <div id="columnOne">
-        <div class="buttons">7</div>
-        <div class="buttons">4</div>
-        <div class="buttons">1</div>
-        <div class="buttons">0</div>
-      </div>
-      <div id="columnTwo">
-        <div class="buttons">8</div>
-        <div class="buttons">5</div>
-        <div class="buttons">2</div>
-        <div class="buttons">00</div>
-      </div>
-      <div id="columnThree">
-        <div class="buttons">9</div>
-        <div class="buttons">6</div>
-        <div class="buttons">3</div>
-        <div class="buttons">.</div>
-      </div>
-      <div id="columnFour">
-        <div class="buttons">÷</div>
-        <div class="buttons">×</div>
-        <div class="buttons">-</div>
-        <div class="buttons">+</div>
-      </div>
-      <div id="columnFive">
-        <div class="buttons">clear</div>
-        <div class="buttons">get balance</div>
-        <div class="buttons">deposit cash</div>
-        <div class="buttons">withdraw cash</div>
-      </div>
+      <table>
+        <tr>
+          <td><div class="button">7</div></td>
+          <td><div class="button">8</div></td>
+          <td><div class="button">9</div></td>
+          <td><div class="button">÷</div></td>
+          <td><div class="button">clear</div></td>
+        </tr>
+        <tr>
+          <td><div class="button">4</div></td>
+          <td><div class="button">5</div></td>
+          <td><div class="button">6</div></td>
+          <td><div class="button">×</div></td>
+          <td><div class="button">get balance</div></td>
+        </tr>
+        <tr>
+          <td><div class="button">1</div></td>
+          <td><div class="button">2</div></td>
+          <td><div class="button">3</div></td>
+          <td><div class="button">-</div></td>
+          <td><div class="button">deposit cash</div></td>
+        </tr>
+        <tr>
+          <td><div class="button">0</div></td>
+          <td><div class="button">00</div></td>
+          <td><div class="button">.</div></td>
+          <td><div class="button">+</div></td>
+          <td><div class="button">withdraw cash</div></td>
+        </tr>
+      </table>
     </div>
   </div>
 </body>
