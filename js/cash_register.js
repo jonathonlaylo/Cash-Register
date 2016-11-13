@@ -24,12 +24,13 @@ var withdraw = document.getElementById('withdraw');
 var equal  = document.getElementById('equal');
 
 cashRegister = (function() {
+  //declare variables
   var _tempNum = 0;
   var _decMode = false;
   var _decPlace = 1;
-  // zero tracker to fix last number zero no display bug
-  var _trackDecZeros = 0;
+  var _trackDecZeros = 0; // zero tracker to fix last number zero no display bug
 
+  // display currently active number
   function _showNum() {
     display.innerText = "$" + _tempNum;
   }
@@ -103,6 +104,7 @@ cashRegister = (function() {
     }
   }
 
+  // activate decimal mode
   function _actDec() {
     _decMode = true;
   }
