@@ -1,51 +1,53 @@
-function calculatorModule() {
-  var _memory = 0;
-  var _total = 0;
-  var calculator = {};
+var calculatorModule = (function(){
+  var total = 0;
+  var cash = 0;
 
-  calculator.load = function(x){
-        _total = x;
-        return _total;
-  };
-
-  calculator.getTotal = function(x){
-      return _total;
-  };
-
-  calculator.add = function(x){
-      _total += x;
-  };
-
-  calculator.subtract = function(x){
-      _total -= x;
-  };
-
-
-  calculator.multiply = function(x){
-      _total *= x;
-  };
-
-  calculator.divide = function(x){
-      _total /= x;
-  };
-
-  calculator.recallMemory = function(x){
-      return _memory;
-  };
-
-  calculator.saveMemory = function(x){
-      _memory = _total;
-  };
-
-  calculator.clearMemory = function(x){
-      _memory = 0;
-   };
-
-   calculator.load = function(x){
-    if (x === "number"){
-      throw new Error();
+    function clear(){
+      this.total = 0;
+      return total;
     }
-  };
 
-  return calculator;
-}
+    function add(x){
+      total += x;
+      console.log(total);
+      return total;
+    }
+
+    function subtract(x){
+      total -= x;
+      console.log(total);
+      return total;
+    }
+
+    function divide(x){
+      total /= x;
+      console.log(total);
+      return total;
+    }
+
+    function multiply(x){
+      total *= x;
+      console.log(total);
+      return total;
+    }
+
+    function recallCash(x){
+      return memory;
+    }
+
+    function saveCash(x){
+      cash = total;
+    }
+
+    return {
+      clear: clear,
+      add: add,
+      subtract: subtract,
+      divide: divide,
+      multiply: multiply,
+      recallCash: recallCash,
+      saveCash: saveCash
+    };
+//dasdasdasdadnasd
+
+})();
