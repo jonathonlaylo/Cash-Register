@@ -41,28 +41,12 @@ cashRegister = (function() {
       _tempNum += parseInt(button.innerText);
       _showNum();
     } else { // decimal mode
-      if(_decPlace !== 0.01) { //if smaller than hundredth decimal digit
+      if(_decPlace > 0.01) { //if smaller than hundredth decimal digit
         _decPlace /= 10;
         _tempNum = _tempNum + _decPlace * parseInt(button.innerText);
         _showNum();
         // because it is making decimals like 5.1099999999999
-        if(_decPlace === 0.1) {
-          _tempNum = _cutTenth(_tempNum);
-          // fix if last number is 0 doesn't display bug
-          if(parseInt(button.innerText) === 0) {
-            _trackDecZeros += 1;
-            display.innerText = "$" + _tempNum + ".0";
-          }
-        }else if(_decPlace === 0.01) {
-          _tempNum = _cutHundredth(_tempNum);
-          // fix if last number is 0 doesn't display bug
-          if(parseInt(button.innerText) === 0) {
-            display.innerText = "$" + _tempNum + "0";
-          }
-          if(parseInt(button.innerText) === 0 && _trackDecZeros === 1) {
-            display.innerText = "$" + _tempNum + ".00";
-          }
-        }
+        _fixDecimalZeros(button);
       }else{ //if entering thousandth decimal digit territory
         message.innerText = "The smallest US currency denomination is $0.01";
       }
@@ -78,7 +62,7 @@ cashRegister = (function() {
       if(_decPlace === 0.01) {
         message.innerText = "The smallest US currency denomination is $0.01";
       }
-      if(_decPlace !== 0.01) {
+      if(_decPlace >= 0.01) {
         _decPlace /= 100;
         display.innerText = "$" + _tempNum + ".00";
       }
@@ -95,6 +79,28 @@ cashRegister = (function() {
   function _cutHundredth(num) {
     var newNum = Math.round(num * 100) / 100;
     return newNum;
+  }
+
+  // fix decimal artifacts and zeros in decimal places
+  function _fixDecimalZeros(button) {
+    if(_decPlace === 0.1) {
+      _tempNum = _cutTenth(_tempNum);
+      // fix first zero in decimal
+      if(parseInt(button.innerText) === 0) {
+        _trackDecZeros += 1;
+        display.innerText = "$" + _tempNum + ".0";
+      }
+    }else if(_decPlace === 0.01) {
+      _tempNum = _cutHundredth(_tempNum);
+      // fix zero after a non-zero number in decimal
+      if(parseInt(button.innerText) === 0) {
+        display.innerText = "$" + _tempNum + "0";
+      }
+      // fix second zero in a row in decimal
+      if(parseInt(button.innerText) === 0 && _trackDecZeros === 1) {
+        display.innerText = "$" + _tempNum + ".00";
+      }
+    }
   }
 
   function _actDec() {
