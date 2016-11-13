@@ -1,4 +1,4 @@
-var calculatorModule = (function(){
+var calculatorModule = (function(x, y){
   var total = 0;
   var cash = 0;
 
@@ -7,36 +7,46 @@ var calculatorModule = (function(){
       return total;
     }
 
-    function add(x){
-      total += x;
+    function add(x,y){
+      total = x + y;
       console.log(total);
       return total;
     }
 
-    function subtract(x){
-      total -= x;
+    function subtract(x, y){
+      total = x - y;
       console.log(total);
       return total;
     }
 
-    function divide(x){
-      total /= x;
+    function divide(x, y){
+      total = x / y;
       console.log(total);
       return total;
     }
 
-    function multiply(x){
-      total *= x;
+    function multiply(x, y){
+      total = x * y;
       console.log(total);
       return total;
+    }
+
+    function recallTotal(x){
+      return total;
+    }
+
+    function writeTotal(x){
+      total = cash;
+      return totall;
     }
 
     function recallCash(x){
-      return memory;
+      return cash;
     }
 
-    function saveCash(x){
+    function writeCash(x){
       cash = total;
+      return cash;
     }
 
     return {
@@ -45,9 +55,10 @@ var calculatorModule = (function(){
       subtract: subtract,
       divide: divide,
       multiply: multiply,
+      recallTotal: recallTotal,
+      writeTotal: writeTotal,
       recallCash: recallCash,
-      saveCash: saveCash
+      writeCash: writeCash
     };
-//dasdasdasdadnasd
 
 })();
