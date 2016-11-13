@@ -5,4 +5,61 @@ html {
 
 #calcBlock {
   background-color: #e0dcd9;
+  padding: 10px;
+  width: 355px;
+}
+
+#displayBlock {
+  margin: 10px;
+}
+
+#buttonsBlock {
+  margin: 10px;
+  margin-bottom: 0px;
+}
+
+.display {
+  background-color: #fdfaff;
+  padding: 10px;
+  text-align: right;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 3px;
+  border-color: black;
+}
+
+.message {
+  background-color: #d6d2c9;
+  padding: 2px;
+  color: #ba4232;
+  text-align: right;
+}
+
+.button {
+  background-color: white;
+  padding: 5px;
+  text-align: center;
+  line-height: 170%;
+  border-style: solid;
+  border-width: 2px;
+  border-radius: 3px;
+  border-color: black;
+  width: 60%;
+  height: 80%;
+}
+
+#clear, #getBalance, #deposit, #withdraw {
+  background-color: #cfdae8;
+  color: black;
+  width: 100px;
+}
+
+td {
+  width: 50px;
+  height: 50px;
+}
+
+.blank {
+  background-color: transparent;
+  border-width: 0px;
 }
