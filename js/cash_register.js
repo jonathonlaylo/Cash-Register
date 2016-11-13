@@ -27,24 +27,74 @@ cashRegister = (function() {
   var _tempNum = 0;
   var _decMode = false;
   var _decPlace = 1;
+  // zero tracker to fix last number zero no display bug
+  var _trackDecZeros = 0;
 
   function _showNum() {
-    display.innerText = _tempNum;
+    display.innerText = "$" + _tempNum;
   }
 
+  // generic function for numerical button presses
   function _pressNumButton(button) {
-    if (_decMode === false) {
+    if(_decMode === false) { // non decimal mode
       _tempNum *= 10;
       _tempNum += parseInt(button.innerText);
-    } else {
-      if(_decPlace !== 0.01) {
+      _showNum();
+    } else { // decimal mode
+      if(_decPlace !== 0.01) { //if smaller than hundredth decimal digit
         _decPlace /= 10;
         _tempNum = _tempNum + _decPlace * parseInt(button.innerText);
-      }else{
+        _showNum();
+        // because it is making decimals like 5.1099999999999
+        if(_decPlace === 0.1) {
+          _tempNum = _cutTenth(_tempNum);
+          // fix if last number is 0 doesn't display bug
+          if(parseInt(button.innerText) === 0) {
+            _trackDecZeros += 1;
+            display.innerText = "$" + _tempNum + ".0";
+          }
+        }else if(_decPlace === 0.01) {
+          _tempNum = _cutHundredth(_tempNum);
+          // fix if last number is 0 doesn't display bug
+          if(parseInt(button.innerText) === 0) {
+            display.innerText = "$" + _tempNum + "0";
+          }
+          if(parseInt(button.innerText) === 0 && _trackDecZeros === 1) {
+            display.innerText = "$" + _tempNum + ".00";
+          }
+        }
+      }else{ //if entering thousandth decimal digit territory
         message.innerText = "The smallest US currency denomination is $0.01";
       }
     }
-    _showNum();
+  }
+
+  // special function for double zero button
+  function _pressDoubleZero() {
+    if(_decMode === false) {
+      _tempNum *= 100;
+      _showNum();
+    } else {
+      if(_decPlace === 0.01) {
+        message.innerText = "The smallest US currency denomination is $0.01";
+      }
+      if(_decPlace !== 0.01) {
+        _decPlace /= 100;
+        display.innerText = "$" + _tempNum + ".00";
+      }
+    }
+  }
+
+  // because it is making decimals like 5.1099999999999
+  function _cutTenth(num) {
+    var newNum = Math.round(num * 10) / 10;
+    return newNum;
+  }
+
+  // because it is making decimals like 5.1099999999999
+  function _cutHundredth(num) {
+    var newNum = Math.round(num * 100) / 100;
+    return newNum;
   }
 
   function _actDec() {
@@ -54,6 +104,7 @@ cashRegister = (function() {
   return {
     showNum: _showNum,
     pressNumButton: _pressNumButton,
+    pressDoubleZero: _pressDoubleZero,
     actDec: _actDec
   };
 })();
@@ -71,4 +122,5 @@ seven.addEventListener('click', function(){cashRegister.pressNumButton(seven);})
 eight.addEventListener('click', function(){cashRegister.pressNumButton(eight);});
 nine.addEventListener('click', function(){cashRegister.pressNumButton(nine);});
 zero.addEventListener('click', function(){cashRegister.pressNumButton(zero);});
+doubleZero.addEventListener('click', function(){cashRegister.pressDoubleZero();});
 decimal.addEventListener('click', function(){cashRegister.actDec();});
