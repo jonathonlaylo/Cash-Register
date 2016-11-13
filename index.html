@@ -1,56 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang='en'>
 <head>
-  <meta charset="UTF-8">
+  <meta charset='UTF-8'>
   <title>CASH REGISTER</title>
-  <link href="style.css" rel="stylesheet" media="screen">
+  <link href='style.css' rel='stylesheet' media='screen'>
 </head>
 <body>
-  <div id="calcBlock">
+  <div id='calcBlock'>
     <!-- top portion -->
-    <div id="displayBlock">
-      <div class="display">0000000</div>
-      <div class="message">Lorum Ipsum Dolor Sit Amet</div>
+    <div id='displayBlock'>
+      <div class='display'>0000000</div>
+      <div class='message'>Lorum Ipsum Dolor Sit Amet</div>
     </div>
     <!-- bottom portion -->
-    <div id="buttonsBlock">
+    <div id='buttonsBlock'>
       <table>
         <tr>
-          <td><div class="button">7</div></td>
-          <td><div class="button">8</div></td>
-          <td><div class="button">9</div></td>
-          <td><div class="button">÷</div></td>
-          <td><div class="button" id="clear">clear</div></td>
+          <td><div class='button' id = '7'>7</div></td>
+          <td><div class='button' id = '8'>8</div></td>
+          <td><div class='button' id = '9'>9</div></td>
+          <td><div class='button' id = 'divide'>÷</div></td>
+          <td><div class='button' id = 'clear'>clear</div></td>
         </tr>
         <tr>
-          <td><div class="button">4</div></td>
-          <td><div class="button">5</div></td>
-          <td><div class="button">6</div></td>
-          <td><div class="button">×</div></td>
-          <td><div class="button" id="getBalance">get balance</div></td>
+          <td><div class='button' id = '4'>4</div></td>
+          <td><div class='button' id = '5'>5</div></td>
+          <td><div class='button' id = '6'>6</div></td>
+          <td><div class='button' id = 'mutiply'>×</div></td>
+          <td><div class='button' id = 'getBalance'>get balance</div></td>
         </tr>
         <tr>
-          <td><div class="button">1</div></td>
-          <td><div class="button">2</div></td>
-          <td><div class="button">3</div></td>
-          <td><div class="button">-</div></td>
-          <td><div class="button" id="deposit">deposit cash</div></td>
+          <td><div class='button' id = '1'>1</div></td>
+          <td><div class='button' id = '2'>2</div></td>
+          <td><div class='button' id = '3'>3</div></td>
+          <td><div class='button' id = 'subtract'>-</div></td>
+          <td><div class='button' id = 'deposit'>deposit cash</div></td>
         </tr>
         <tr>
-          <td><div class="button">0</div></td>
-          <td><div class="button">00</div></td>
-          <td><div class="button">.</div></td>
-          <td><div class="button">+</div></td>
-          <td><div class="button" id="withdraw">withdraw cash</div></td>
+          <td><div class='button' id = '0'>0</div></td>
+          <td><div class='button' id = '00'>00</div></td>
+          <td><div class='button' id = 'decimal'>.</div></td>
+          <td><div class='button' id = 'add'>+</div></td>
+          <td><div class='button' id = 'withdraw'>withdraw cash</div></td>
         </tr>
         <tr>
-          <td><div class="button blank"></div></td>
-          <td><div class="button blank"></div></td>
-          <td><div class="button blank"></div></td>
-          <td><div class="button" id="equal">=</div></td>
+          <td><div class='button blank'></div></td>
+          <td><div class='button blank'></div></td>
+          <td><div class='button blank'></div></td>
+          <td><div class='button' id = 'equal'>=</div></td>
         </tr>
       </table>
     </div>
   </div>
+  <script src='js/calculator.js'></script>
+  <script src='js/cash_register.js'></script>
 </body>
+
 </html>
