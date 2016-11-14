@@ -58,6 +58,7 @@ cashRegister = (function() {
       _zeroInHundredthDec = false;
       _blankState = true;
       _negative = false;
+      console.log("cleared");
     }
   }
 
@@ -65,6 +66,7 @@ cashRegister = (function() {
   function _append(num) {
     var _tempStr = _operand2.toString();
     if(num === ".") {
+      _tempStr = "0";
       _blankState = false;
       _decMode = true;
       if(_decDigits === -1) {
@@ -74,6 +76,10 @@ cashRegister = (function() {
       if(_blankState) {
         if(_firstNotZero(num)) {
           _tempStr = num;
+          _blankState = false;
+        }
+        if(num === "0" || num === "00") {
+          _tempStr = "0";
           _blankState = false;
         }
       }else{
