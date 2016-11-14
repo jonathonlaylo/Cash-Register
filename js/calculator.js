@@ -1,6 +1,7 @@
 var calculatorModule = (function(x, y){
   var total = 0;
   var cash = 0;
+  var op = "";
 
     function clear(){
       this.total = 0;

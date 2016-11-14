@@ -27,15 +27,20 @@ cashRegister = (function() {
 
   var _decTracker = 0;
   var _decMode = false;
+  var _firstZero = true;
 
   function _pressNumButton(button) {
-    if(display.innerText === "0") {
+    if(display.innerText === "$0") {
       display.innerText = "";
     } // clear initial zero
     if(_decTracker < 2) { // check if less than 2 decimal digits
       if(_decTracker === 1 && button.innerText === "00") {
         display.innerText += "0"; // fix three digits at decimal when "00" is pressed bug
       }else{
+        if(_firstZero) {
+          display.innerText += "$";
+          _firstZero = false;
+        }
         display.innerText += button.innerText; // concat str
         if(display.innerText === "00") {
           display.innerText = 0;
@@ -77,3 +82,4 @@ nine.addEventListener('click', function(){cashRegister.pressNumButton(nine);});
 zero.addEventListener('click', function(){cashRegister.pressNumButton(zero);});
 doubleZero.addEventListener('click', function(){cashRegister.pressNumButton(doubleZero);});
 decimal.addEventListener('click', function(){cashRegister.pressNumButton(decimal);});
+document.addEventListener('keydown', checkKeyPressed, false);
