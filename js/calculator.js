@@ -10,35 +10,27 @@ var calculatorModule = (function(x, y){
 
     function add(x,y){
       _total = x + y;
-      console.log(_total);
-      return _total;
     }
 
     function subtract(x, y){
       _total = x - y;
-      console.log(_total);
-      return _total;
     }
 
     function divide(x, y){
       _total = x / y;
-      console.log(_total);
-      return _total;
     }
 
     function multiply(x, y){
       _total = x * y;
-      console.log(_total);
-      return _total;
     }
 
     function recall_total(){
       return _total;
     }
 
-    function write_total(){
-      _total = _cash;
-      return _totall;
+    function write_total(num){
+      _total = num;
+      return _total;
     }
 
     function recall_cash(){

@@ -49,12 +49,14 @@ cashRegister = (function() {
   // clean up _opMode
   function _clearOpMode() {
     if(_opMode) {
+      display.innerText = "$ 0";
       _opMode = false;
       _operator2 = 0;
-      _decDigits = 0;
+      _decDigits = -1;
+      _decMode = false;
       _zeroInTenthDec = false;
       _zeroInHundredthDec = false;
-      _firstZero = true;
+      _blankState = true;
       _negative = false;
     }
   }
@@ -82,7 +84,6 @@ cashRegister = (function() {
         }
       }
     }
-    //console.log(_tempStr);
     _operand2 = parseFloat(_tempStr);
   }
 
@@ -105,7 +106,6 @@ cashRegister = (function() {
           _zeroInHundredthDec = true;
           _decDigits++;
         }
-        //console.log(_tempStr, num, _decDigits);
         break;
       case 1:
         _decDigits++;
@@ -132,15 +132,22 @@ cashRegister = (function() {
   // refresh display
   function _display() {
     if(_negative) {
-      display.innerText = "- $" + format();
+      if(_op === "add" || _op === "subtract") {
+        display.innerText = "- $ " + format();
+      }else{
+        display.innerText = "- " + format();
+      }
     }else{
-      display.innerText = "$" + format();
+      if(_op === "add" || _op === "subtract") {
+        display.innerText = "$ " + format();
+      }else{
+        display.innerText = format();
+      }
     }
   }
 
   // format decimals
   function format() {
-    console.log(_operand2);
     switch(_decDigits) {
       case 0:
         return _operand2 + ".";
@@ -151,18 +158,87 @@ cashRegister = (function() {
         if(_zeroInTenthDec && _zeroInHundredthDec) { return _operand2 + ".00"; }
         return _operand2;
       default:
-        return _operand2;
+        return _operand2.toString();
     }
   }
 
   // function for operator buttons
-  function _pressOpButton() {
+  function _pressOpButton(button) {
+    if(_negative) {
+      _operand2 = 0 - _operand2;
+    }
+    if(_opMode === false) {
+      _calculate();
+    }
+    _opMode = true;
+    console.log(_opMode);
+    _op = button.id;
+    _displayCurrentOpMode(button);
+  }
 
+  // special function for subtract
+  function _pressSubtract(button) {
+    if(_blankState && button.id === "subtract") {
+      _negative = true;
+      _display();
+    }else{
+      _pressOpButton(button);
+    }
+  }
+
+  function _calculate() {
+    switch(_op) {
+      case "add":
+        calculatorModule.add(_operand1, _operand2);
+        break;
+      case "subtract":
+        calculatorModule.subtract(_operand1, _operand2);
+        break;
+      case "multiply":
+        calculatorModule.multiply(_operand1, _operand2);
+        break;
+      case "divide":
+        calculatorModule.divide(_operand1, _operand2);
+        break;
+    }
+    calculatorModule.write_total(Math.round(calculatorModule.recall_total() * 100) / 100);
+    _operand1 = calculatorModule.recall_total();
+  }
+
+  function _displayCurrentOpMode(button) {
+    _formatZeros();
+    switch(_op) {
+      case "add":
+        message.innerText += " +";
+        break;
+      case "subtract":
+        message.innerText += " -";
+        break;
+      case "multiply":
+        message.innerText += " ×";
+        break;
+      case "divide":
+        message.innerText += " ÷";
+        break;
+      case "equal":
+        message.innerText = "= " + message.innerText;
+    }
+  }
+
+  function _formatZeros() {
+    if(_operand1 < 0) {
+      message.innerText = "- $ " + (0 - _operand1);
+      display.innerText = "- $ " + (0 - _operand1);
+    }else{
+      message.innerText = "$ " + _operand1;
+      display.innerText = "$ " + _operand1;
+    }
   }
 
   return{
     pressNumButton: _pressNumButton,
-    pressOpButton: _pressOpButton
+    pressOpButton: _pressOpButton,
+    pressSubtract: _pressSubtract
   };
 
 })();
@@ -182,6 +258,6 @@ zero.addEventListener('click', function(){cashRegister.pressNumButton(zero);});
 doubleZero.addEventListener('click', function(){cashRegister.pressNumButton(doubleZero);});
 decimal.addEventListener('click', function(){cashRegister.pressNumButton(decimal);});
 add.addEventListener('click', function(){cashRegister.pressOpButton(add);});
-subtract.addEventListener('click', function(){cashRegister.pressOpButton(subtract);});
+subtract.addEventListener('click', function(){cashRegister.pressSubtract(subtract);});
 multiply.addEventListener('click', function(){cashRegister.pressOpButton(multiply);});
 divide.addEventListener('click', function(){cashRegister.pressOpButton(divide);});
