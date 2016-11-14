@@ -1,25 +1,30 @@
 html {
-  font-family: Calibri;
-  background-color: #21254b;
+  font-family: helvetica neue;
+  font-size: 20px;
+  text-align: center;
+  background-color: #fdfaff;
 }
 
+/* Background color for calculator */
 #calcBlock {
   background-color: #e0dcd9;
   padding: 10px;
-  width: 500px;
+  width: 370px;
+  margin: 10px;
 }
 
 #displayBlock {
-  width: 435px;
+  width: 350px;
   margin: 10px;
 }
 
 #buttonsBlock {
-  width: 435px;
+  width: 350px;
   margin: 10px;
   margin-bottom: 0px;
 }
 
+/* Display box */
 .display {
   background-color: #fdfaff;
   padding: 10px;
@@ -30,51 +35,62 @@ html {
   border-color: black;
 }
 
+/* Tiny message block below display */
 .message {
-  width: 435px;
+  width: 345px;
   background-color: #d6d2c9;
-  padding: 2px;
+  padding: 0px;
   color: #ba4232;
   text-align: right;
 }
 
 .button {
-  padding: 10px 15px 11px !important;
-  font-size: 15px !important;
-  background-color: #e0dcd9;
-  font-weight: bold;
-  text-shadow: 1px 1px #898989;
-  color: #ffffff;
-  border-radius: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border: 2px solid #898989;
-  cursor: pointer;
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset;
-  transition: all 0.3s ease 0s;
+  -webkit-border-radius: 11;
+  -moz-border-radius: 11;
+  border-radius: 0px;
 
-/*  background-color: white;
-  padding: 5px;
-  text-align: center;
-  line-height: 170%;
-  border-style: solid;
-  border-width: 2px;
-  border-radius: 3px;
-  border-color: black;
-  width: 60%;
-  height: 80%;*/
+  color: #000000;
+  background: #fdfaff;
+  padding: 10px 10px 10px 10px;
+  text-decoration: none;
+  cursor:pointer;
 }
 
-button: hover{
-  background: #000000;
+.button:hover {
+  background: #a3a9ad;
+  text-decoration: none;
 }
+
+.button:active {
+  box-shadow: 0 -5px #666;
+  transform: translateY(5px);
+}
+
+.operation{
+  -webkit-border-radius: 11;
+  -moz-border-radius: 11;
+  border-radius: 0px;
+  color: #000000;
+  background: #FF9500;
+  padding: 10px 10px 10px 10px;
+  text-decoration: none;
+  cursor:pointer;
+}
+
+.operation:hover {
+  background: #FF9500;
+  text-decoration: none;
+}
+
+.operation:active {
+  box-shadow: 0 5px #666;
+  transform: translateY(5px);
+}
+
 
 #clear, #getBalance, #deposit, #withdraw {
-  background-color: #cfdae8;
-  color: black;
-  width: 100px;
+  width: 90px;
+  background: #eceae6;
 }
 
 td {
