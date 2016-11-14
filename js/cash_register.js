@@ -30,7 +30,8 @@ cashRegister = (function() {
   var _firstZero = true;
   var _op = "add";
   var _opMode = false;
-  var _operand = 0;
+  var _operand1 = 0;
+  var _operand2 = 0;
   var _negative = false;
 
   function _pressNumButton(button) {
@@ -95,7 +96,6 @@ cashRegister = (function() {
   }
 
   function _pressOpButton(button) {
-    console.log(_operand);
     _calculate();
     _opMode = true;
     _op = button.id;
@@ -110,8 +110,8 @@ cashRegister = (function() {
   }
 
   function _displayCurrentOpMode(button) {
-    message.innerText = "$" + _operand;
-    display.innerText = "$" + _operand;
+    message.innerText = "$" + _operand1;
+    display.innerText = "$" + _operand1;
     switch(_op) {
       case "add":
         message.innerText += " plus...";
@@ -131,21 +131,21 @@ cashRegister = (function() {
   }
 
   function _calculate() {
-    var operand1 = _operand;
+    var operand1 = _operand1;
     var operand2 = _operandToNum(display.innerText);
     switch(_op) {
       case "add":
-        _operand = calculatorModule.add(operand1, operand2);
-        console.log(_operand);
+        _operand1 = calculatorModule.add(operand1, operand2);
+        console.log(_operand1);
         break;
       case "subtract":
-        _operand = calculatorModule.subtract(operand1, operand2);
+        _operand1 = calculatorModule.subtract(operand1, operand2);
         break;
       case "multiply":
-        _operand = calculatorModule.multiply(operand1, operand2);
+        _operand1 = calculatorModule.multiply(operand1, operand2);
         break;
       case "divide":
-        _operand = calculatorModule.divide(operand1, operand2);
+        _operand1 = calculatorModule.divide(operand1, operand2);
         break;
     }
   }
