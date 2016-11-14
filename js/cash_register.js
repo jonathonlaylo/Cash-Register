@@ -23,139 +23,233 @@ var deposit = document.getElementById('deposit');
 var withdraw = document.getElementById('withdraw');
 var equal  = document.getElementById('equal');
 
+// cashRegister iife
 cashRegister = (function() {
 
-  var _decTracker = 0;
+  // status tracking
+  var _decDigits = -1;
   var _decMode = false;
-  var _firstZero = true;
-  var _op = "add";
+  var _zeroInTenthDec = false;
+  var _zeroInHundredthDec = false;
+  var _blankState = true;
+  var _negative = false;
   var _opMode = false;
+  // temporary storage facilities
+  var _op = "add";
   var _operand1 = 0;
   var _operand2 = 0;
-  var _negative = false;
 
+  // function for number buttons
   function _pressNumButton(button) {
-    _clearNum();
-    _clearInitialZero();
-    if(_decTracker < 2) { // check if less than 2 decimal digits
-      if(_decTracker === 1 && button.innerText === "00") {
-        display.innerText += "0"; // fix three digits at decimal when "00" is pressed bug
+    _clearOpMode();
+    _append(button.innerText);
+    _display();
+  }
+
+  // clean up _opMode
+  function _clearOpMode() {
+    if(_opMode) {
+      display.innerText = "$ 0";
+      _opMode = false;
+      _operator2 = 0;
+      _decDigits = -1;
+      _decMode = false;
+      _zeroInTenthDec = false;
+      _zeroInHundredthDec = false;
+      _blankState = true;
+      _negative = false;
+      console.log("cleared");
+    }
+  }
+
+  //
+  function _append(num) {
+    var _tempStr = _operand2.toString();
+    if(num === ".") {
+      _tempStr = "0";
+      _blankState = false;
+      _decMode = true;
+      if(_decDigits === -1) {
+        _decDigits = 0;
+      }
+    }else{
+      if(_blankState) {
+        if(_firstNotZero(num)) {
+          _tempStr = num;
+          _blankState = false;
+        }
+        if(num === "0" || num === "00") {
+          _tempStr = "0";
+          _blankState = false;
+        }
       }else{
-        if(_firstZero) {
-          display.innerText += "$";
-          if(button.innerText != "0" && button.innerText != "00") {
-            _firstZero = false;
-          }
-        } // add dollar sign if entering first number
-        display.innerText += button.innerText; // concat str
-        if(display.innerText === "$00") {
-          display.innerText = "$0";
+        if(_decMode){
+          _tempStr = _appendDecMode(_tempStr, num);
+        }else{
+          _tempStr = _appendNotDecMode(_tempStr, num);
         }
       }
-      message.innerText = display.innerText;
-      _decActions(button); // perform decimal actions
-    }else{
-      message.innerText = "$0.01 is the smallest US currency denomination"; // error
     }
+    _operand2 = parseFloat(_tempStr);
   }
 
-  function _clearInitialZero() {
-    if(display.innerText === "$0") {
-      display.innerText = "";
+  function _firstNotZero(button) {
+    return (button != "0") && (button != "00");
+  }
+
+  function _appendDecMode(_tempStr, num) {
+
+    switch(_decDigits) {
+      case 0:
+        _decDigits++;
+        _tempStr += ".";
+        _tempStr += num;
+        if(num === "0") {
+          _zeroInTenthDec = true;
+        }
+        if(num === "00") {
+          _zeroInTenthDec = true;
+          _zeroInHundredthDec = true;
+          _decDigits++;
+        }
+        break;
+      case 1:
+        _decDigits++;
+        if(_zeroInTenthDec) {
+          _tempStr += ".0";
+        }
+        if(num === "00") {
+          _zeroInHundredthDec = true;
+        }
+        _tempStr += num;
+        break;
+      case 2:
+        message.innerText = "Highest US$ denomination is $0.01";
+        break;
     }
+    return _tempStr;
   }
 
-  function _clearNum() {
-    if(_opMode) {
-      display.innerText = "$0";
-      _opMode = false;
-      _firstZero = true;
-      _decMode = false;
-      _decTracker = 0;
-      _negative = false;
-    }
+  function _appendNotDecMode(_tempStr, num) {
+    _tempStr += num;
+    return _tempStr;
   }
 
-  function _decActions(button) {
-    if(_decMode) {
-      _decTracker++;
-    } // increment _decTracker if _decMode on and button not "."
-    if(button.innerText === ".") {
-      _decMode = true;
-    } // turn on _decTracker if button is "."
-    if(_decMode && button.innerText === "00") {
-      _decTracker ++;
-    } // increment _decTracker again if button is "00"
-  }
-
-  function _displayNeg() {
+  // refresh display
+  function _display() {
     if(_negative) {
-      display.innerText = display.innerText.substr(2);
-      display.innerText = "- $" + display.innerText;
+      if(_op === "add" || _op === "subtract") {
+        display.innerText = "- $ " + format();
+      }else{
+        display.innerText = "- " + format();
+      }
+    }else{
+      if(_op === "add" || _op === "subtract") {
+        display.innerText = "$ " + format();
+      }else{
+        display.innerText = format();
+      }
     }
   }
 
+  // format decimals
+  function format() {
+    switch(_decDigits) {
+      case 0:
+        return _operand2 + ".";
+      case 1:
+        if(_zeroInTenthDec) { return _operand2 + ".0"; }
+        return _operand2;
+      case 2:
+        if(_zeroInTenthDec && _zeroInHundredthDec) { return _operand2 + ".00"; }
+        return _operand2;
+      default:
+        return _operand2.toString();
+    }
+  }
+
+  // function for operator buttons
   function _pressOpButton(button) {
-    _calculate();
+    if(_negative) {
+      _operand2 = 0 - _operand2;
+    }
+    if(_opMode === false) {
+      _calculate();
+    }
     _opMode = true;
+    console.log(_opMode);
     _op = button.id;
     _displayCurrentOpMode(button);
   }
 
-  function _operandToNum(str) {
-    var newNum = 0;
-    str = str.substr(1);
-    newNum = parseFloat(str);
-    return newNum;
-  }
-
-  function _displayCurrentOpMode(button) {
-    message.innerText = "$" + _operand1;
-    display.innerText = "$" + _operand1;
-    switch(_op) {
-      case "add":
-        message.innerText += " plus...";
-        break;
-      case "subtract":
-        message.innerText += " minus...";
-        break;
-      case "multiply":
-        message.innerText += " times...";
-        break;
-      case "divide":
-        message.innerText += " divided by....";
-        break;
-      case "equal":
-        message.innerText = "equals " + message.innerText;
+  // special function for subtract
+  function _pressSubtract(button) {
+    if(_blankState && button.id === "subtract") {
+      _negative = true;
+      _display();
+    }else{
+      _pressOpButton(button);
     }
   }
 
   function _calculate() {
-    var operand1 = _operand1;
-    var operand2 = _operandToNum(display.innerText);
     switch(_op) {
       case "add":
-        _operand1 = calculatorModule.add(operand1, operand2);
-        console.log(_operand1);
+        calculatorModule.add(_operand1, _operand2);
         break;
       case "subtract":
-        _operand1 = calculatorModule.subtract(operand1, operand2);
+        calculatorModule.subtract(_operand1, _operand2);
         break;
       case "multiply":
-        _operand1 = calculatorModule.multiply(operand1, operand2);
+        calculatorModule.multiply(_operand1, _operand2);
         break;
       case "divide":
-        _operand1 = calculatorModule.divide(operand1, operand2);
+        calculatorModule.divide(_operand1, _operand2);
         break;
+    }
+    calculatorModule.write_total(Math.round(calculatorModule.recall_total() * 100) / 100);
+    _operand1 = calculatorModule.recall_total();
+  }
+
+  function _displayCurrentOpMode(button) {
+    _formatZeros();
+    switch(_op) {
+      case "add":
+        message.innerText += " +";
+        break;
+      case "subtract":
+        message.innerText += " -";
+        break;
+      case "multiply":
+        message.innerText += " ×";
+        break;
+      case "divide":
+        message.innerText += " ÷";
+        break;
+      case "equal":
+        message.innerText = "= " + message.innerText;
     }
   }
 
-  return {
+  function _formatZeros() {
+    if(_operand1 < 0) {
+      message.innerText = "- $ " + (0 - _operand1);
+      display.innerText = "- $ " + (0 - _operand1);
+    }else{
+      message.innerText = "$ " + _operand1;
+      display.innerText = "$ " + _operand1;
+    }
+  }
+
+  return{
     pressNumButton: _pressNumButton,
-    pressOpButton: _pressOpButton
+    pressOpButton: _pressOpButton,
+    pressSubtract: _pressSubtract
   };
+
 })();
 
+// addEventListener
 equal.addEventListener('click', function(){cashRegister.pressOpButton(equal);});
 one.addEventListener('click', function(){cashRegister.pressNumButton(one);});
 two.addEventListener('click', function(){cashRegister.pressNumButton(two);});
@@ -170,6 +264,6 @@ zero.addEventListener('click', function(){cashRegister.pressNumButton(zero);});
 doubleZero.addEventListener('click', function(){cashRegister.pressNumButton(doubleZero);});
 decimal.addEventListener('click', function(){cashRegister.pressNumButton(decimal);});
 add.addEventListener('click', function(){cashRegister.pressOpButton(add);});
-subtract.addEventListener('click', function(){cashRegister.pressOpButton(subtract);});
+subtract.addEventListener('click', function(){cashRegister.pressSubtract(subtract);});
 multiply.addEventListener('click', function(){cashRegister.pressOpButton(multiply);});
 divide.addEventListener('click', function(){cashRegister.pressOpButton(divide);});
