@@ -77,7 +77,6 @@ cashRegister = (function() {
       }else{
         if(_decMode){
           _tempStr = _appendDecMode(_tempStr, num);
-          //console.log(_tempStr);
         }else{
           _tempStr = _appendNotDecMode(_tempStr, num);
         }
@@ -98,14 +97,28 @@ cashRegister = (function() {
         _decDigits++;
         _tempStr += ".";
         _tempStr += num;
+        if(num === "0") {
+          _zeroInTenthDec = true;
+        }
+        if(num === "00") {
+          _zeroInTenthDec = true;
+          _zeroInHundredthDec = true;
+          _decDigits++;
+        }
         //console.log(_tempStr, num, _decDigits);
         break;
       case 1:
         _decDigits++;
+        if(_zeroInTenthDec) {
+          _tempStr += ".0";
+        }
+        if(num === "00") {
+          _zeroInHundredthDec = true;
+        }
         _tempStr += num;
         break;
       case 2:
-        message.innerText = "No!";
+        message.innerText = "Highest US$ denomination is $0.01";
         break;
     }
     return _tempStr;
@@ -127,6 +140,7 @@ cashRegister = (function() {
 
   // format decimals
   function format() {
+    console.log(_operand2);
     switch(_decDigits) {
       case 0:
         return _operand2 + ".";
