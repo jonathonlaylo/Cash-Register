@@ -34,10 +34,12 @@ cashRegister = (function() {
   var _blankState = true;
   var _negative = false;
   var _opMode = false;
+  var _pressedEqual = false;
   // temporary storage facilities
   var _op = "add";
   var _operand1 = 0;
   var _operand2 = 0;
+  var _tempStr = 0;
 
   // function for number buttons
   function _pressNumButton(button) {
@@ -49,7 +51,7 @@ cashRegister = (function() {
   // clean up _opMode
   function _clearOpMode() {
     if(_opMode) {
-      display.innerText = "$ 0";
+      _tempStr = "0";
       _opMode = false;
       _operator2 = 0;
       _decDigits = -1;
@@ -59,33 +61,36 @@ cashRegister = (function() {
       _blankState = true;
       _negative = false;
       console.log("cleared");
-    }
+    } // reset states
+    if(_pressedEqual) {
+      _operand1 = 0;
+      _op = "add";
+    } // check if just pressed equal
   }
 
-  //
+  // append new number to display
   function _append(num) {
-    var _tempStr = _operand2.toString();
-    if(num === ".") {
-      _tempStr = "0";
+    _tempStr = _operand2.toString();
+    if(num === ".") { // if pressed decimal button
       _blankState = false;
       _decMode = true;
       if(_decDigits === -1) {
         _decDigits = 0;
       }
-    }else{
-      if(_blankState) {
-        if(_firstNotZero(num)) {
+    }else{ // if didn't press decimal button
+      if(_blankState) { // if entering first number
+        if(_firstNotZero(num)) { // if pressed any number other than zero
           _tempStr = num;
           _blankState = false;
         }
-        if(num === "0" || num === "00") {
+        if(num === "0" || num === "00") { // if pressed zero
           _tempStr = "0";
           _blankState = false;
         }
-      }else{
-        if(_decMode){
+      }else{ // if not entering first number
+        if(_decMode){ // if in decimal mode
           _tempStr = _appendDecMode(_tempStr, num);
-        }else{
+        }else{ // if not in decimal mode
           _tempStr = _appendNotDecMode(_tempStr, num);
         }
       }
@@ -93,43 +98,45 @@ cashRegister = (function() {
     _operand2 = parseFloat(_tempStr);
   }
 
+  // return true if button pressed is neither zeroes
   function _firstNotZero(button) {
     return (button != "0") && (button != "00");
   }
 
+  // run if in decimal mode
   function _appendDecMode(_tempStr, num) {
-
-    switch(_decDigits) {
-      case 0:
+    switch(_decDigits) { // check how many decimal places in
+      case 0: // entering first decimal digit
         _decDigits++;
         _tempStr += ".";
         _tempStr += num;
         if(num === "0") {
           _zeroInTenthDec = true;
-        }
+        } // note that tenth decimal place is zero
         if(num === "00") {
           _zeroInTenthDec = true;
           _zeroInHundredthDec = true;
           _decDigits++;
-        }
+        } // note that tenth & hundredth decimal place is zero
         break;
-      case 1:
+      case 1: // entering second decimal digit
         _decDigits++;
         if(_zeroInTenthDec) {
           _tempStr += ".0";
-        }
+        } // fix bug when previous digit is zero
         if(num === "00") {
           _zeroInHundredthDec = true;
-        }
+        } // note that hundredth decimal place is zero
         _tempStr += num;
         break;
-      case 2:
+      case 2: // entering third decimal digit
         message.innerText = "Highest US$ denomination is $0.01";
         break;
     }
     return _tempStr;
   }
 
+  // run if not in decimal mode
   function _appendNotDecMode(_tempStr, num) {
     _tempStr += num;
     return _tempStr;
@@ -137,17 +144,21 @@ cashRegister = (function() {
 
   // refresh display
   function _display() {
-    if(_negative) {
-      if(_op === "add" || _op === "subtract") {
+    if(_negative) { // if currently processing negative number
+      if(_op === "add" || _op === "subtract") { // add dollar sign if adding or subtracting
         display.innerText = "- $ " + format();
-      }else{
+        message.innerText = "- $ " + format();
+      }else{ // do not add dollar sign if multiplying or dividing
         display.innerText = "- " + format();
+        message.innerText = "- " + format();
       }
-    }else{
-      if(_op === "add" || _op === "subtract") {
+    }else{ // if currently processing positive number
+      if(_op === "add" || _op === "subtract") { // add dollar sign if adding or subtracting
         display.innerText = "$ " + format();
-      }else{
+        message.innerText = "$ " + format();
+      }else{ // do not add dollar sign if multiplying or dividing
         display.innerText = format();
+        message.innerText = format();
       }
     }
   }
@@ -155,34 +166,39 @@ cashRegister = (function() {
   // format decimals
   function format() {
     switch(_decDigits) {
-      case 0:
-        return _operand2 + ".";
-      case 1:
-        if(_zeroInTenthDec) { return _operand2 + ".0"; }
+      case 0: // if just pressed decimal button
+        return _operand2 + "."; // display decimal sign
+      case 1: // if just entered first decimal digit
+        if(_zeroInTenthDec) {
+          return _operand2 + ".0";
+        } // fix does not display when first decimal digit is zero bug
         return _operand2;
-      case 2:
-        if(_zeroInTenthDec && _zeroInHundredthDec) { return _operand2 + ".00"; }
+      case 2: // if just entered second decimal digit
+        if(_zeroInTenthDec && _zeroInHundredthDec) {
+          return _operand2 + ".00";
+        } // fix does not display when second decimal digit is zero bug
         return _operand2;
-      default:
+      default: // if there are no decimals
         return _operand2.toString();
     }
   }
 
   // function for operator buttons
   function _pressOpButton(button) {
-    if(_negative) {
+    if(_negative) { // before operation, check if current number is negative
       _operand2 = 0 - _operand2;
     }
-    if(_opMode === false) {
+    if(_opMode === false) { // if not selecting operation
       _calculate();
     }
     _opMode = true;
-    console.log(_opMode);
     _op = button.id;
-    _displayCurrentOpMode(button);
+    _displayCurrentOpMode(button); // output to #message current op mode
   }
 
-  // special function for subtract
+  // special function for subtract button
+  // if used in blank state, act as negative button
+  // if not used in blank state, act as minus button
   function _pressSubtract(button) {
     if(_blankState && button.id === "subtract") {
       _negative = true;
@@ -192,6 +208,7 @@ cashRegister = (function() {
     }
   }
 
+  // perform calculations
   function _calculate() {
     switch(_op) {
       case "add":
@@ -207,12 +224,18 @@ cashRegister = (function() {
         calculatorModule.divide(_operand1, _operand2);
         break;
     }
+    // round final answer to two decimal digits
     calculatorModule.write_total(Math.round(calculatorModule.recall_total() * 100) / 100);
+    // assign final answer to _operand1
     _operand1 = calculatorModule.recall_total();
   }
 
+  // output to #message current operation mode
   function _displayCurrentOpMode(button) {
-    _formatZeros();
+    _formatZeros(); // formatting for _operand1 (final result)
+    // indicate did not press equal button as default
+    // to prevent clearing display
+    _pressedEqual = false;
     switch(_op) {
       case "add":
         message.innerText += " +";
@@ -228,9 +251,11 @@ cashRegister = (function() {
         break;
       case "equal":
         message.innerText = "= " + message.innerText;
+        _pressedEqual = true; // indicate pressed equal button
     }
   }
 
+  // formatting for _operand1 (final result)
   function _formatZeros() {
     if(_operand1 < 0) {
       message.innerText = "- $ " + (0 - _operand1);
@@ -241,6 +266,7 @@ cashRegister = (function() {
     }
   }
 
+  // reveal public functions
   return{
     pressNumButton: _pressNumButton,
     pressOpButton: _pressOpButton,
