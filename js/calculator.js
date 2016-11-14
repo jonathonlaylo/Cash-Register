@@ -1,4 +1,5 @@
 var calculatorModule = (function(x, y){
+
   var _total = 0;
   var _cash = 0;
 

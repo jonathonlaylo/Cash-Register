@@ -27,23 +27,51 @@ cashRegister = (function() {
 
   var _decTracker = 0;
   var _decMode = false;
+  var _firstZero = true;
+  var _op = "add";
+  var _opMode = false;
+  var _operand = 0;
+  var _negative = false;
 
   function _pressNumButton(button) {
-    if(display.innerText === "0") {
-      display.innerText = "";
-    } // clear initial zero
+    _clearNum();
+    _clearInitialZero();
     if(_decTracker < 2) { // check if less than 2 decimal digits
       if(_decTracker === 1 && button.innerText === "00") {
         display.innerText += "0"; // fix three digits at decimal when "00" is pressed bug
       }else{
+        if(_firstZero) {
+          display.innerText += "$";
+          if(button.innerText != "0" && button.innerText != "00") {
+            _firstZero = false;
+          }
+        } // add dollar sign if entering first number
         display.innerText += button.innerText; // concat str
-        if(display.innerText === "00") {
-          display.innerText = 0;
+        if(display.innerText === "$00") {
+          display.innerText = "$0";
         }
       }
+      message.innerText = display.innerText;
       _decActions(button); // perform decimal actions
     }else{
       message.innerText = "$0.01 is the smallest US currency denomination"; // error
+    }
+  }
+
+  function _clearInitialZero() {
+    if(display.innerText === "$0") {
+      display.innerText = "";
+    }
+  }
+
+  function _clearNum() {
+    if(_opMode) {
+      display.innerText = "$0";
+      _opMode = false;
+      _firstZero = true;
+      _decMode = false;
+      _decTracker = 0;
+      _negative = false;
     }
   }
 
@@ -59,12 +87,76 @@ cashRegister = (function() {
     } // increment _decTracker again if button is "00"
   }
 
+  function _displayNeg() {
+    if(_negative) {
+      display.innerText = display.innerText.substr(2);
+      display.innerText = "- $" + display.innerText;
+    }
+  }
+
+  function _pressOpButton(button) {
+    console.log(_operand);
+    _calculate();
+    _opMode = true;
+    _op = button.id;
+    _displayCurrentOpMode(button);
+  }
+
+  function _operandToNum(str) {
+    var newNum = 0;
+    str = str.substr(1);
+    newNum = parseFloat(str);
+    return newNum;
+  }
+
+  function _displayCurrentOpMode(button) {
+    message.innerText = "$" + _operand;
+    display.innerText = "$" + _operand;
+    switch(_op) {
+      case "add":
+        message.innerText += " plus...";
+        break;
+      case "subtract":
+        message.innerText += " minus...";
+        break;
+      case "multiply":
+        message.innerText += " times...";
+        break;
+      case "divide":
+        message.innerText += " divided by....";
+        break;
+      case "equal":
+        message.innerText = "equals " + message.innerText;
+    }
+  }
+
+  function _calculate() {
+    var operand1 = _operand;
+    var operand2 = _operandToNum(display.innerText);
+    switch(_op) {
+      case "add":
+        _operand = calculatorModule.add(operand1, operand2);
+        console.log(_operand);
+        break;
+      case "subtract":
+        _operand = calculatorModule.subtract(operand1, operand2);
+        break;
+      case "multiply":
+        _operand = calculatorModule.multiply(operand1, operand2);
+        break;
+      case "divide":
+        _operand = calculatorModule.divide(operand1, operand2);
+        break;
+    }
+  }
+
   return {
-    pressNumButton: _pressNumButton
+    pressNumButton: _pressNumButton,
+    pressOpButton: _pressOpButton
   };
 })();
 
-equal.addEventListener('click', function(){cashRegister.showNum();});
+equal.addEventListener('click', function(){cashRegister.pressOpButton(equal);});
 one.addEventListener('click', function(){cashRegister.pressNumButton(one);});
 two.addEventListener('click', function(){cashRegister.pressNumButton(two);});
 three.addEventListener('click', function(){cashRegister.pressNumButton(three);});
@@ -77,3 +169,7 @@ nine.addEventListener('click', function(){cashRegister.pressNumButton(nine);});
 zero.addEventListener('click', function(){cashRegister.pressNumButton(zero);});
 doubleZero.addEventListener('click', function(){cashRegister.pressNumButton(doubleZero);});
 decimal.addEventListener('click', function(){cashRegister.pressNumButton(decimal);});
+add.addEventListener('click', function(){cashRegister.pressOpButton(add);});
+subtract.addEventListener('click', function(){cashRegister.pressOpButton(subtract);});
+multiply.addEventListener('click', function(){cashRegister.pressOpButton(multiply);});
+divide.addEventListener('click', function(){cashRegister.pressOpButton(divide);});
