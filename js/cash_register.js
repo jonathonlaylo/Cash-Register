@@ -46,6 +46,7 @@ cashRegister = (function() {
     _clearOpMode();
     _append(button.innerText);
     _display();
+    _checkDecimal();
   }
 
   // clean up _opMode
@@ -72,6 +73,9 @@ cashRegister = (function() {
   function _append(num) {
     _tempStr = _operand2.toString();
     if(num === ".") { // if pressed decimal button
+      if(_blankState) {
+        _tempStr = "0";
+      }
       _blankState = false;
       _decMode = true;
       if(_decDigits === -1) {
@@ -129,11 +133,18 @@ cashRegister = (function() {
         } // note that hundredth decimal place is zero
         _tempStr += num;
         break;
-      case 2: // entering third decimal digit
-        message.innerText = "Highest US$ denomination is $0.01";
+      case 2:
+        _decDigits++;
         break;
     }
     return _tempStr;
+  }
+
+  // display decimal error
+  function _checkDecimal() {
+    if(_decDigits > 2) {
+      message.innerText = "Highest US$ denomination is $0.01";
+    }
   }
 
   // run if not in decimal mode
@@ -174,9 +185,13 @@ cashRegister = (function() {
         } // fix does not display when first decimal digit is zero bug
         return _operand2;
       case 2: // if just entered second decimal digit
+      case 3: // same thing when attempting to enter third decimal digit
         if(_zeroInTenthDec && _zeroInHundredthDec) {
           return _operand2 + ".00";
         } // fix does not display when second decimal digit is zero bug
+        if(_zeroInHundredthDec) {
+          return _operand2 + "0";
+        }
         return _operand2;
       default: // if there are no decimals
         return _operand2.toString();
