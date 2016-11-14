@@ -1,52 +1,52 @@
 var calculatorModule = (function(x, y){
-  var total = 0;
-  var cash = 0;
+  var _total = 0;
+  var _cash = 0;
 
     function clear(){
-      this.total = 0;
-      return total;
+      _total = 0;
+      return _total;
     }
 
     function add(x,y){
-      total = x + y;
-      console.log(total);
-      return total;
+      _total = x + y;
+      console.log(_total);
+      return _total;
     }
 
     function subtract(x, y){
-      total = x - y;
-      console.log(total);
-      return total;
+      _total = x - y;
+      console.log(_total);
+      return _total;
     }
 
     function divide(x, y){
-      total = x / y;
-      console.log(total);
-      return total;
+      _total = x / y;
+      console.log(_total);
+      return _total;
     }
 
     function multiply(x, y){
-      total = x * y;
-      console.log(total);
-      return total;
+      _total = x * y;
+      console.log(_total);
+      return _total;
     }
 
-    function recallTotal(x){
-      return total;
+    function recall_total(){
+      return _total;
     }
 
-    function writeTotal(x){
-      total = cash;
-      return totall;
+    function write_total(){
+      _total = _cash;
+      return _totall;
     }
 
-    function recallCash(x){
-      return cash;
+    function recall_cash(){
+      return _cash;
     }
 
-    function writeCash(x){
-      cash = total;
-      return cash;
+    function write_cash(){
+      _cash = _total;
+      return _cash;
     }
 
     return {
@@ -55,10 +55,10 @@ var calculatorModule = (function(x, y){
       subtract: subtract,
       divide: divide,
       multiply: multiply,
-      recallTotal: recallTotal,
-      writeTotal: writeTotal,
-      recallCash: recallCash,
-      writeCash: writeCash
+      recall_total: recall_total,
+      write_total: write_total,
+      recall_cash: recall_cash,
+      write_cash: write_cash
     };
 
 })();
