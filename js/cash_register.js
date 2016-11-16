@@ -303,28 +303,36 @@ cashRegister = (function() {
   }
 
   function _pressBalanceButton(button){
-    display.innerText = calculatorModule.recall_cash();
+    _clearOpMode();
+    _append(calculatorModule.recall_cash());
+    _display();
+    _checkDecimal();
   }
 
   function _pressDepositButton(button){
+    _opMode = true;
     var tempStoreDeposit = 0;
     tempStoreDeposit = calculatorModule.recall_cash();
+    console.log(calculatorModule.recall_cash());
     if(_operand2 < 0){
       message.innerText = "Can not deposit with a negative cash!";
     } else {
-      calculatorModule.write_cash(calculatorModule.add(tempStoreDeposit));
+      calculatorModule.write_cash(calculatorModule.addCash(tempStoreDeposit, _operand2));
     }
-    console.log(tempStoreDeposit);
+    _pressedEqual = true;
+    console.log(calculatorModule.recall_cash());
   }
 
   function _pressWithdrawButton(button){
+    _opMode = true;
     var tempStoreDeposit = 0;
     tempStoreDeposit = calculatorModule.recall_cash();
     if (tempStoreDeposit < _operand2) {
       message.innerText = "Can not withdraw with negative balance!";
     } else {
-      calculatorModule.write_cash(calculatorModule.subtract(tempStoreDeposit));
+      calculatorModule.write_cash(calculatorModule.subtractCash(tempStoreDeposit, _operand2));
     }
+    _pressedEqual = true;
     console.log(tempStoreDeposit);
   }
 
