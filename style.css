@@ -2,12 +2,12 @@ html {
   font-family: helvetica neue;
   font-size: 20px;
   text-align: center;
-  background-color: #5d5a68;
+  background-color: #f5d554;
 }
 
 /* Background color for calculator */
 #calcBlock {
-  background-color: #666666;
+  background-color: #699bf0;
   padding: 10px;
   width: 370px;
   margin: 10px;
@@ -75,7 +75,6 @@ html {
   background-color: #c4c4c4;
 }
 
-<<<<<<< HEAD
 .button:active, .operation:active, #clear:active, #getBalance:active, #deposit:active, #withdraw:active {
   /*box-shadow: 0 -5px #666;
   transform: translateY(5px);*/
