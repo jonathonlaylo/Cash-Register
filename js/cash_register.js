@@ -64,12 +64,13 @@ cashRegister = (function() {
       _zeroInHundredthDec = false;
       _blankState = true;
       _negative = false;
+      clear.innerText = "clear";
     } // reset states
     if(_pressedEqual) {
       _operand1 = 0;
       _op = "add";
+      clear.innerText = "all clear";
     } // check if just pressed equal
-    clear.innerText = "clear";
   }
 
   // append new number to display
@@ -272,6 +273,7 @@ cashRegister = (function() {
         message.innerText = "= " + message.innerText;
         _pressedEqual = true; // indicate pressed equal button
     }
+    clear.innerText = "all clear";
   }
 
   // formatting for _operand1 (final result)
@@ -288,7 +290,7 @@ cashRegister = (function() {
   // function for clear button
   function _pressClearButton(button) {
     _opMode = true; // to enable _clearOpMode() to perform actions
-    if(button.innerText === "clear") {
+    if(button.innerText === "clear" && _blankState === false) {
       _clearOpMode();
       button.innerText = "all clear";
       _opMode = true; // recover opMode because stepping back
