@@ -75,6 +75,7 @@ html {
   background-color: #c4c4c4;
 }
 
+<<<<<<< HEAD
 .button:active, .operation:active, #clear:active, #getBalance:active, #deposit:active, #withdraw:active {
   /*box-shadow: 0 -5px #666;
   transform: translateY(5px);*/
@@ -117,3 +118,4 @@ td {
   background-color: transparent;
   border-width: 0px;
 }
+

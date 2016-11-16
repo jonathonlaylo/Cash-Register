@@ -24,6 +24,16 @@ var calculatorModule = (function(x, y){
       _total = x * y;
     }
 
+    function addCash(x,y){
+      _cash = x + y;
+      return _cash;
+    }
+
+    function subtractCash(x, y){
+      _cash = x - y;
+      return _cash;
+    }
+
     function recall_total(){
       return _total;
     }
@@ -37,15 +47,17 @@ var calculatorModule = (function(x, y){
       return _cash;
     }
 
-    function write_cash(){
-      _cash = _total;
+    function write_cash(num){
+      _cash = num;
       return _cash;
     }
 
     return {
       clear: clear,
       add: add,
+      addCash: addCash,
       subtract: subtract,
+      subtractCash: subtractCash,
       divide: divide,
       multiply: multiply,
       recall_total: recall_total,
