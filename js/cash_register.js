@@ -54,19 +54,19 @@ cashRegister = (function() {
     if(_opMode) {
       _tempStr = "0";
       _opMode = false;
-      _operator2 = 0;
+      _operand2 = 0;
       _decDigits = -1;
       _decMode = false;
       _zeroInTenthDec = false;
       _zeroInHundredthDec = false;
       _blankState = true;
       _negative = false;
-      console.log("cleared");
     } // reset states
     if(_pressedEqual) {
       _operand1 = 0;
       _op = "add";
     } // check if just pressed equal
+    clear.innerText = "clear";
   }
 
   // append new number to display
@@ -155,6 +155,7 @@ cashRegister = (function() {
 
   // refresh display
   function _display() {
+    console.log("displayed");
     if(_negative) { // if currently processing negative number
       if(_op === "add" || _op === "subtract") { // add dollar sign if adding or subtracting
         display.innerText = "- $ " + format();
@@ -246,7 +247,7 @@ cashRegister = (function() {
   }
 
   // output to #message current operation mode
-  function _displayCurrentOpMode(button) {
+  function _displayCurrentOpMode() {
     _formatZeros(); // formatting for _operand1 (final result)
     // indicate did not press equal button as default
     // to prevent clearing display
@@ -281,11 +282,27 @@ cashRegister = (function() {
     }
   }
 
+  // function for clear button
+  function _pressClearButton(button) {
+    _opMode = true; // to enable _clearOpMode() to perform actions
+    if(button.innerText === "clear") {
+      _clearOpMode();
+      button.innerText = "all clear";
+      _opMode = true; // recover opMode because stepping back
+      _displayCurrentOpMode();
+    }else{
+      _pressedEqual = true;
+      _clearOpMode();
+      _display();
+    }
+  }
+
   // reveal public functions
   return{
     pressNumButton: _pressNumButton,
     pressOpButton: _pressOpButton,
-    pressSubtract: _pressSubtract
+    pressSubtract: _pressSubtract,
+    pressClearButton: _pressClearButton
   };
 
 })();
@@ -308,3 +325,4 @@ add.addEventListener('click', function(){cashRegister.pressOpButton(add);});
 subtract.addEventListener('click', function(){cashRegister.pressSubtract(subtract);});
 multiply.addEventListener('click', function(){cashRegister.pressOpButton(multiply);});
 divide.addEventListener('click', function(){cashRegister.pressOpButton(divide);});
+clear.addEventListener('click', function(){cashRegister.pressClearButton(clear);});
