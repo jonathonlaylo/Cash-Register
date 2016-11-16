@@ -41,6 +41,9 @@ cashRegister = (function() {
   var _operand2 = 0;
   var _tempStr = 0;
 
+  //balance for balance button
+  var balance = 0;
+
   // function for number buttons
   function _pressNumButton(button) {
     _clearOpMode();
@@ -297,12 +300,41 @@ cashRegister = (function() {
     }
   }
 
+  function _pressBalanceButton(button){
+    display.innerText = calculatorModule.recall_cash();
+  }
+
+  function _pressDepositButton(button){
+    var tempStoreDeposit = 0;
+    tempStoreDeposit = calculatorModule.recall_cash();
+    if(_operand2 < 0){
+      message.innerText = "Can not deposit with a negative cash!";
+    } else {
+      calculatorModule.write_cash(calculatorModule.add(tempStoreDeposit));
+    }
+    console.log(tempStoreDeposit);
+  }
+
+  function _pressWithdrawButton(button){
+    var tempStoreDeposit = 0;
+    tempStoreDeposit = calculatorModule.recall_cash();
+    if (tempStoreDeposit < _operand2) {
+      message.innerText = "Can not withdraw with negative balance!";
+    } else {
+      calculatorModule.write_cash(calculatorModule.subtract(tempStoreDeposit));
+    }
+    console.log(tempStoreDeposit);
+  }
+
   // reveal public functions
   return{
     pressNumButton: _pressNumButton,
     pressOpButton: _pressOpButton,
     pressSubtract: _pressSubtract,
-    pressClearButton: _pressClearButton
+    pressClearButton: _pressClearButton,
+    pressBalanceButton: _pressBalanceButton,
+    pressDepositButton: _pressDepositButton,
+    pressWithdrawButton: _pressWithdrawButton
   };
 
 })();
@@ -326,3 +358,6 @@ subtract.addEventListener('click', function(){cashRegister.pressSubtract(subtrac
 multiply.addEventListener('click', function(){cashRegister.pressOpButton(multiply);});
 divide.addEventListener('click', function(){cashRegister.pressOpButton(divide);});
 clear.addEventListener('click', function(){cashRegister.pressClearButton(clear);});
+getBalance.addEventListener('click', function(){cashRegister.pressBalanceButton(getBalance);});
+deposit.addEventListener('click', function(){cashRegister.pressDepositButton(deposit);});
+withdraw.addEventListener('click', function(){cashRegister.pressWithdrawButton(withdraw);});

@@ -62,7 +62,7 @@ html {
 }
 
 .button:active {
-  box-shadow: 0 -5px #666;
+  box-shadow: 0 5px #666;
   transform: translateY(5px);
 }
 
@@ -104,3 +104,4 @@ td {
   background-color: transparent;
   border-width: 0px;
 }
+

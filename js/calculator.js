@@ -37,8 +37,8 @@ var calculatorModule = (function(x, y){
       return _cash;
     }
 
-    function write_cash(){
-      _cash = _total;
+    function write_cash(num){
+      _cash = num;
       return _cash;
     }
 
