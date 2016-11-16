@@ -35,6 +35,7 @@ cashRegister = (function() {
   var _negative = false;
   var _opMode = false;
   var _pressedEqual = false;
+  var _clearDepDisp = false;
   // temporary storage facilities
   var _op = "add";
   var _operand1 = 0;
@@ -54,7 +55,7 @@ cashRegister = (function() {
 
   // clean up _opMode
   function _clearOpMode() {
-    if(_opMode) {
+    if(_opMode || _clearDepDisp) {
       _tempStr = "0";
       _opMode = false;
       _operand2 = 0;
@@ -64,6 +65,7 @@ cashRegister = (function() {
       _zeroInHundredthDec = false;
       _blankState = true;
       _negative = false;
+      _clearDepDisp = false;
       clear.innerText = "clear";
     } // reset states
     if(_pressedEqual) {
@@ -303,14 +305,16 @@ cashRegister = (function() {
   }
 
   function _pressBalanceButton(button){
+    _clearDepDisp = false;
     _clearOpMode();
     _append(calculatorModule.recall_cash());
     _display();
     _checkDecimal();
+    // _pressedEqual = true;
   }
 
   function _pressDepositButton(button){
-    _opMode = true;
+    _clearDepDisp = true;
     var tempStoreDeposit = 0;
     tempStoreDeposit = calculatorModule.recall_cash();
     console.log(calculatorModule.recall_cash());
@@ -319,12 +323,12 @@ cashRegister = (function() {
     } else {
       calculatorModule.write_cash(calculatorModule.addCash(tempStoreDeposit, _operand2));
     }
-    _pressedEqual = true;
+    _blankState = true;
     console.log(calculatorModule.recall_cash());
   }
 
   function _pressWithdrawButton(button){
-    _opMode = true;
+    _clearDepDisp = true;
     var tempStoreDeposit = 0;
     tempStoreDeposit = calculatorModule.recall_cash();
     if (tempStoreDeposit < _operand2) {
@@ -332,7 +336,7 @@ cashRegister = (function() {
     } else {
       calculatorModule.write_cash(calculatorModule.subtractCash(tempStoreDeposit, _operand2));
     }
-    _pressedEqual = true;
+    _blankState = true;
     console.log(tempStoreDeposit);
   }
 
